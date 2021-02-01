@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import FloatingButton from './FloatingButton';
+
 function Home() {
+  const history = useHistory();
+
+  const movePage = path => history.push(path);
+
   return (
     <div>
-      Home
+      <h1>Geo Polygon</h1>
+      <FloatingButton onClick={movePage} path={'/h3'}>START</FloatingButton>
     </div>
   )
 }
