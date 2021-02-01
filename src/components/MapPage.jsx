@@ -1,53 +1,35 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-function MapPage({ options, onMount, className, onMountProps }) {
-  const ref = useRef();
-  const [map, setMap] = useState();
+import { getTargetLatLng } from '../redux/map/mapSlice';
+import { fetchIP } from '../utils/api';
+import Map from './Map';
+import Button from './Button';
 
-  console.log('hes')
+function MapPage() {
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const mapOptions = {
-      zoom: 10,
-      center: { lat: 37.546, lng: 126.949 },
-    }
+    (async function () {
+      try {
+        const result = await fetchIP();
+        const { latitude, longitude } = result;
+        const coordinates = { lat: latitude, lng: longitude };
 
-    const onLoad = () => {
-      setMap(new window.google.maps.Map(ref.current, { ...mapOptions }));
-    };
-
-    if (!window.google) {
-      const script = document.createElement('script');
-
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
-      document.head.append(script);
-
-      script.addEventListener('load', onLoad);
-
-      return () => script.removeEventListener('load', onLoad);
-    } else {
-      onLoad();
-    }
+        dispatch(getTargetLatLng(coordinates));
+      } catch (err) {
+        console.log(err, 'err in component');
+      }
+    })();
   }, []);
 
-  // if (map && typeof onMount === 'function') {
-  //   onMount(map, onMountProps)
-  // }
-
   return (
-    <div
-      style={{ height: '500px', width: '100%' }}
-      {...{ ref, className }}
-    />
+    <div>
+      <Map />
+      <Button>주변다각형</Button>
+    </div>
   )
 }
 
-export default memo(MapPage);
-
-// MapPage.defaultProps = {
-//   options: {
-//     zoom: 10,
-//     center: { lat: 37.546, lng: 126.949 },
-//   },
-// }
+export default MapPage;
