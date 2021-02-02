@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import FloatingButton from './FloatingButton';
 
@@ -18,6 +17,3 @@ function Home() {
 }
 
 export default Home;
-
-Home.propTypes = {
-};

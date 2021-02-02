@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Switch, Route, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
 import Home from './Home';

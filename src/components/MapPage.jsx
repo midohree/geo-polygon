@@ -1,33 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getTargetLatLng } from '../redux/map/mapSlice';
-import { fetchIP } from '../utils/api';
+import { mapAction, mapSelector } from '../features/slice';
+
 import Map from './Map';
 import Button from './Button';
 
 function MapPage() {
   const dispatch = useDispatch();
+  const { isLoading, mainCoord, error } = useSelector(mapSelector.all);
+  const [isClicked, setClicked] = useState(false);
 
   useEffect(() => {
-    (async function () {
-      try {
-        const result = await fetchIP();
-        const { latitude, longitude } = result;
-        const coordinates = { lat: latitude, lng: longitude };
+    const { loadMainLatLng } = mapAction;
 
-        dispatch(getTargetLatLng(coordinates));
-      } catch (err) {
-        console.log(err, 'err in component');
-      }
-    })();
+    dispatch(loadMainLatLng());
   }, []);
 
   return (
     <div>
-      <Map />
-      <Button>주변다각형</Button>
+      {isLoading && <h3>Loading...</h3>}
+      {error && <h3>중심 좌표값을 가져오는데 실패했습니다. 다시 시도해주세요.</h3>}
+      <h1>중심 좌표 값 : {mainCoord.lat}, {mainCoord.lng}</h1>
+      <Map coordinates={mainCoord} />
+      <Button handleClick={handleClick}>주변다각형</Button>
     </div>
   )
 }

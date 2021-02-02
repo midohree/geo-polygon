@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 
-function Map({ options, onMount, className, onMountProps }) {
+function Map({
+  coordinates,
+}) {
   const ref = useRef();
   const [map, setMap] = useState();
+  const { lat, lng } = coordinates;
+
+  console.log(lat, lng);
 
   useEffect(() => {
     const mapOptions = {
       zoom: 10,
-      center: { lat: 37.546, lng: 126.949 },
+      center: { lat: lat, lng: lng },
     }
 
     const onLoad = () => {
@@ -30,11 +35,12 @@ function Map({ options, onMount, className, onMountProps }) {
   }, []);
 
   return (
-    <div
-      style={{ height: '500px', width: '100%' }}
-      {...{ ref, className }}
-    />
+    <div style={{ height: '500px', width: '100%' }} {...{ ref }} />
   )
 }
 
-export default memo(Map);
+export default Map;
+
+Map.propTypes = {
+  coordinates: PropTypes.object.isRequired,
+};
