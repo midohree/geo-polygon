@@ -15,6 +15,6 @@ module.exports = {
   rules: {
       semi: ['always'],
       quotes: ['single'],
-      "react-hooks/exhaustive-deps": 'warn'
+      'react-hooks/exhaustive-deps': 'off',
   },
 };

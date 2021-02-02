@@ -12,14 +12,23 @@ function MapPage() {
   const dispatch = useDispatch();
   const { isLoading, mainCoord, error } = useSelector(mapSelector.all);
   const [isClicked, setClicked] = useState(false);
+  const [isDoubled, setDoubled] = useState(false);
+  const [count, setCount] = useState(0);
   const [polygonCoords, setPolygonCoords] = useState({});
 
   const handleClick = () => {
+    setCount(count + 1);
+
+    console.log(count);
     const h3Index = geoToH3(mainCoord.lat, mainCoord.lng, 7);
     const singlepolygonCoord = h3ToGeoBoundary(h3Index);
 
     const h3IndexArr = kRing(h3Index, 1);
     const multipolygonCoords = h3SetToMultiPolygon(h3IndexArr);
+
+    if (count) {
+      setDoubled(true);
+    }
 
     setPolygonCoords({
       singlepolygon: singlepolygonCoord,
@@ -41,10 +50,12 @@ function MapPage() {
         ? <h3>Loading...</h3>
         : <>
             <h1>중심 좌표 값 : {mainCoord.lat}, {mainCoord.lng}</h1>
-            <Map coordinates={mainCoord} polygonCoords={polygonCoords} isClicked={isClicked} />
+            <Map coordinates={mainCoord} polygonCoords={polygonCoords} isClicked={isClicked} isDoubled={isDoubled} />
           </>
       }
-      <Button handleClick={handleClick}>주변다각형</Button>
+      <Button handleClick={handleClick}>
+        {count ? '주변다각형' : '다각형보기'}
+      </Button>
     </div>
   )
 }

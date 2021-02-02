@@ -5,6 +5,7 @@ function Map({
   coordinates,
   polygonCoords,
   isClicked,
+  isDoubled,
 }) {
   const ref = useRef();
   const [map, setMap] = useState();
@@ -52,14 +53,36 @@ function Map({
 
       polyline.setMap(map);
     }
-  }, [isClicked])
+  }, [isClicked]);
+
+  useEffect(() => {
+    if (isDoubled) {
+      const { multipolygon } = polygonCoords;
+      let multipolygonArr = [];
+
+      console.log(multipolygon[0][0])
+
+      multipolygon[0][0].forEach((el) => {
+        multipolygonArr.push({ lat: el[0], lng: el[1]});
+      });
+
+      const polyline = new window.google.maps.Polygon({
+        paths: multipolygonArr,
+        strokeColor: '#000',
+        fillColor: '#fff',
+        opacity: 0.5,
+      });
+
+      polyline.setMap(map);
+    }
+  }, [isDoubled])
 
   return (
     <div style={{ height: '500px', width: '100%' }} {...{ ref }} />
   )
 }
 
-export default Map;
+export default memo(Map);
 
 Map.propTypes = {
   coordinates: PropTypes.object.isRequired,
