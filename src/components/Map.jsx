@@ -10,9 +10,6 @@ function Map({
   const [map, setMap] = useState();
   const { lat, lng } = coordinates;
 
-  console.log(coordinates, '센터');
-  console.log(polygonCoords, '폴리곤');
-
   useEffect(() => {
     const mapOptions = {
       zoom: 10,
@@ -20,14 +17,6 @@ function Map({
     }
 
     const onLoad = () => {
-      if (isClicked) {
-        console.log('클릭되었씀')
-        setMap(new window.google.maps.Polygon({
-          paths: polygonCoords.singlePolygon,
-          fillColor: '#0000ff',
-          opacity: 0.5,
-        }));
-      }
       setMap(new window.google.maps.Map(ref.current, { ...mapOptions }));
     };
 
@@ -43,7 +32,27 @@ function Map({
     } else {
       onLoad();
     }
-  }, [isClicked]);
+  }, []);
+
+  useEffect(() => {
+    if (isClicked) {
+      const { singlepolygon } = polygonCoords;
+      let singlepolygonArr = [];
+
+      singlepolygon.forEach((el) => {
+        singlepolygonArr.push({ lat: el[0], lng: el[1]});
+      });
+
+      const polyline = new window.google.maps.Polygon({
+        paths: singlepolygonArr,
+        strokeColor: '#000',
+        fillColor: '#0000ff',
+        opacity: 0.5,
+      });
+
+      polyline.setMap(map);
+    }
+  }, [isClicked])
 
   return (
     <div style={{ height: '500px', width: '100%' }} {...{ ref }} />

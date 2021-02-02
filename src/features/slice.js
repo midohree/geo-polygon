@@ -37,7 +37,6 @@ const selectAllState = createSelector(
   state => state.mainCoord,
   state => state.error,
   (isLoading, mainCoord, error) => {
-    console.log(mainCoord, 'in selector')
     return { isLoading, mainCoord, error };
   }
 );

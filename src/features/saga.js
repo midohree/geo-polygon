@@ -5,8 +5,6 @@ import { mapAction } from './slice';
 function* handleMainLatLng() {
   const { loadMainLatLngSuccess, loadMainLatLngFail } = mapAction;
 
-  console.log(loadMainLatLngFail, loadMainLatLngSuccess)
-
   try {
     const coordinates = yield call(fetchIP);
 
