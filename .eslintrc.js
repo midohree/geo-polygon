@@ -1,7 +1,10 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   env: {
     browser: true,
     es2021: true,
+    jest: true,
+    node: true,
   },
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   parserOptions: {
@@ -13,8 +16,21 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-      semi: ['always'],
-      quotes: ['single'],
-      'react-hooks/exhaustive-deps': 'off',
+    'comma-dangle': ['warn', 'always-multiline'],
+    'arrow-parens': ['warn', 'as-needed'],
+    'eol-last': ['warn', 'always'],
+    'no-unused-vars': ['warn', { args: 'none' }],
+    quotes: ['warn', 'single'],
+    semi: ['warn', 'always'],
+    'space-before-function-paren': [
+      'warn',
+      {
+        anonymous: 'always',
+        named: 'never',
+        asyncArrow: 'always',
+      },
+    ],
+    'space-before-blocks': ['warn', 'always'],
+    'no-process-env': ['off'],
   },
 };
