@@ -1,8 +1,14 @@
 import React from 'react';
-import { Switch, Route, Redirect, BrowserRouter as Router } from 'react-router-dom';
+import { Switch, useLocation, Route, Redirect, BrowserRouter as Router } from 'react-router-dom';
 
 import Home from './Home';
 import MapPage from './MapPage';
+
+export const LocationDisplay = () => {
+  const location = useLocation();
+
+  return <div data-testid='location-display'>{location.pathname}</div>;
+};
 
 function App() {
   return (
