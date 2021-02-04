@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 function Map({
   coordinates,
   polygonCoords,
-  isClicked,
-  isDoubled,
+  count,
 }) {
   const ref = useRef();
   const [map, setMap] = useState();
@@ -15,7 +14,7 @@ function Map({
     const mapOptions = {
       zoom: 10,
       center: { lat: lat, lng: lng },
-    }
+    };
 
     const onLoad = () => {
       setMap(new window.google.maps.Map(ref.current, { ...mapOptions }));
@@ -36,16 +35,26 @@ function Map({
   }, []);
 
   useEffect(() => {
-    if (isClicked) {
-      const { singlepolygon } = polygonCoords;
+    if (count > 0) {
       let singlepolygonArr = [];
+      let multipolygonArr = [];
 
-      singlepolygon.forEach((el) => {
-        singlepolygonArr.push({ lat: el[0], lng: el[1]});
-      });
+      if (count === 1) {
+        const { singlepolygon } = polygonCoords;
+
+        singlepolygon.forEach(el => {
+          singlepolygonArr.push({ lat: el[0], lng: el[1]});
+        });
+      } else {
+        const { multipolygon } = polygonCoords;
+
+        multipolygon[0][0].forEach(el => {
+          multipolygonArr.push({ lat: el[0], lng: el[1]});
+        });
+      }
 
       const polyline = new window.google.maps.Polygon({
-        paths: singlepolygonArr,
+        paths: count === 1 ? singlepolygonArr : multipolygonArr,
         strokeColor: '#000',
         fillColor: '#0000ff',
         opacity: 0.5,
@@ -53,33 +62,11 @@ function Map({
 
       polyline.setMap(map);
     }
-  }, [isClicked]);
-
-  useEffect(() => {
-    if (isDoubled) {
-      const { multipolygon } = polygonCoords;
-      let multipolygonArr = [];
-
-      console.log(multipolygon[0][0])
-
-      multipolygon[0][0].forEach((el) => {
-        multipolygonArr.push({ lat: el[0], lng: el[1]});
-      });
-
-      const polyline = new window.google.maps.Polygon({
-        paths: multipolygonArr,
-        strokeColor: '#000',
-        fillColor: '#fff',
-        opacity: 0.5,
-      });
-
-      polyline.setMap(map);
-    }
-  }, [isDoubled])
+  }, [count]);
 
   return (
     <div style={{ height: '500px', width: '100%' }} {...{ ref }} />
-  )
+  );
 }
 
 export default memo(Map);
@@ -87,5 +74,5 @@ export default memo(Map);
 Map.propTypes = {
   coordinates: PropTypes.object.isRequired,
   polygonCoords: PropTypes.object.isRequired,
-  isClicked: PropTypes.bool.isRequired,
+  count: PropTypes.number.isRequired,
 };

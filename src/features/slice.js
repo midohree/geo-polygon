@@ -21,7 +21,7 @@ const reducers = {
   loadMainLatLngFail: (state, { payload: error }) => {
     state.isLoading = false;
     state.error = error;
-  }
+  },
 };
 
 const name = 'MAP';
@@ -38,12 +38,12 @@ const selectAllState = createSelector(
   state => state.error,
   (isLoading, mainCoord, error) => {
     return { isLoading, mainCoord, error };
-  }
+  },
 );
 
 export const mapSelector = {
-  all: state => selectAllState(state[MAP])
-}
+  all: state => selectAllState(state[MAP]),
+};
 
 export const MAP = slice.name;
 export const mapReducer = slice.reducer;

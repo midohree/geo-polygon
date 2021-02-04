@@ -1,8 +1,8 @@
-import { configureStore, combineReducers, createSelector } from '@reduxjs/toolkit';
-import logger from 'redux-logger';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 
 import { all } from 'redux-saga/effects';
+
 import { MAP, mapReducer } from '../features/slice';
 import { watchUnload } from '../features/saga';
 
@@ -13,9 +13,7 @@ export const rootReducer = combineReducers({
 const sagaMiddleware = createSagaMiddleware();
 
 function* rootSaga() {
-  yield all([
-    watchUnload(),
-  ])
+  yield all([watchUnload()]);
 }
 
 const createStore = () => {
@@ -28,6 +26,6 @@ const createStore = () => {
   sagaMiddleware.run(rootSaga);
 
   return store;
-}
+};
 
 export default createStore;
