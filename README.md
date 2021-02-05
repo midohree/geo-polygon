@@ -40,7 +40,6 @@ REACT_APP_API_ADDRESS=175.126.38.231
 npm start
 
 ```
----
 
 ## 기술 스택
 
