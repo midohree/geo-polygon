@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
+
 import PropTypes from 'prop-types';
+
+import { polylineOptions, mapOptions } from '../constants';
 
 function Map({
   coordinates,
   polygonCoords,
-  count,
+  polygonStyle,
 }) {
   const ref = useRef();
   const [map, setMap] = useState();
@@ -25,7 +28,6 @@ function Map({
 
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
       document.head.append(script);
-
       script.addEventListener('load', onLoad);
 
       return () => script.removeEventListener('load', onLoad);
@@ -35,37 +37,42 @@ function Map({
   }, []);
 
   useEffect(() => {
-    if (count > 0) {
+    if(polygonStyle) {
       let singlepolygonArr = [];
       let multipolygonArr = [];
 
-      if (count === 1) {
-        const { singlepolygon } = polygonCoords;
+      switch(polygonStyle) {
+        case 'singlepolygon': {
+          const { singlepolygon } = polygonCoords;
 
-        singlepolygon.forEach(el => {
-          singlepolygonArr.push({ lat: el[0], lng: el[1]});
-        });
-      } else {
-        const { multipolygon } = polygonCoords;
+          singlepolygon.forEach(el => {
+            singlepolygonArr.push({ lat: el[0], lng: el[1]});
+          });
+          break;
+        }
+        case 'multipolygon': {
+          const { multipolygon } = polygonCoords;
 
-        multipolygon[0][0].forEach(el => {
-          multipolygonArr.push({ lat: el[0], lng: el[1]});
-        });
+          multipolygon[0][0].forEach(el => {
+            multipolygonArr.push({ lat: el[0], lng: el[1]});
+          });
+          break;
+        }
+        default:
+          break;
       }
 
       const polyline = new window.google.maps.Polygon({
-        paths: count === 1 ? singlepolygonArr : multipolygonArr,
-        strokeColor: '#000',
-        fillColor: '#0000ff',
-        opacity: 0.5,
+        paths: polygonStyle === 'singlepolygon' ? singlepolygonArr : multipolygonArr,
+        ...polylineOptions,
       });
 
       polyline.setMap(map);
     }
-  }, [count]);
+  }, [polygonStyle]);
 
   return (
-    <div style={{ height: '500px', width: '100%' }} {...{ ref }} />
+    <div style={mapOptions} {...{ ref }} />
   );
 }
 
@@ -74,5 +81,5 @@ export default memo(Map);
 Map.propTypes = {
   coordinates: PropTypes.object.isRequired,
   polygonCoords: PropTypes.object.isRequired,
-  count: PropTypes.number.isRequired,
+  polygonStyle: PropTypes.string.isRequired,
 };

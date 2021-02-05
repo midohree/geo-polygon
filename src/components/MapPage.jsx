@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { geoToH3, h3ToGeoBoundary, kRing, h3SetToMultiPolygon } from 'h3-js';
 
 import { mapAction, mapSelector } from '../features/slice';
+import { MESSAGES } from '../constants';
 import Map from './Map';
 import Button from './Button';
+import ErrorPage from './ErrorPage';
+import Loading from './Loading';
 
 function MapPage() {
   const dispatch = useDispatch();
   const { isLoading, mainCoord, error } = useSelector(mapSelector.all);
-  const [count, setCount] = useState(0);
+  const [polygonStyle, setPolygonStyle] = useState('');
   const [polygonCoords, setPolygonCoords] = useState({});
+  const count = useRef(0);
+
+  // let count = 0;
 
   useEffect(() => {
     const { loadMainLatLng } = mapAction;
@@ -20,7 +26,9 @@ function MapPage() {
   }, []);
 
   const handleClick = () => {
-    setCount(count + 1);
+    count.current += 1;
+
+    count.current === 1 ? setPolygonStyle('singlepolygon') : setPolygonStyle('multipolygon');
 
     const h3Index = geoToH3(mainCoord.lat, mainCoord.lng, 7);
     const singlepolygonCoord = h3ToGeoBoundary(h3Index);
@@ -36,12 +44,12 @@ function MapPage() {
 
   return (
     <div>
-      {error && <h3>중심 좌표값을 가져오는데 실패했습니다. 다시 시도해주세요.</h3>}
+      {error && <ErrorPage>{MESSAGES.GET_MAINCOORD_FAIL}</ErrorPage>}
       {isLoading
-        ? <h1>Loading...</h1>
+        ? <Loading />
         : <>
             <h3>중심 좌표 값 : {mainCoord.lat}, {mainCoord.lng}</h3>
-            <Map coordinates={mainCoord} polygonCoords={polygonCoords} count={count} />
+            <Map polygonStyle={polygonStyle} coordinates={mainCoord} polygonCoords={polygonCoords} count={count.current} />
             <Button handleClick={handleClick}>
               {count ? '주변다각형' : '다각형보기'}
             </Button>

@@ -6,7 +6,7 @@ import { all } from 'redux-saga/effects';
 import { MAP, mapReducer } from '../features/slice';
 import { watchUnload } from '../features/saga';
 
-export const rootReducer = combineReducers({
+const rootReducer = combineReducers({
   [MAP]: mapReducer,
 });
 
