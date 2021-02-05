@@ -50,8 +50,6 @@ npm start
 | React-router-dom       |
 | Redux-toolkit          |
 | Redux-saga             |
-| Axios                  |
-| Styled-components      |
 
 ## 주요 기능
 
