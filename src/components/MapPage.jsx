@@ -17,8 +17,6 @@ function MapPage() {
   const [polygonCoords, setPolygonCoords] = useState({});
   const count = useRef(0);
 
-  // let count = 0;
-
   useEffect(() => {
     const { loadMainLatLng } = mapAction;
 
@@ -26,15 +24,13 @@ function MapPage() {
   }, []);
 
   const handleClick = () => {
-    count.current += 1;
-
-    count.current === 1 ? setPolygonStyle('singlepolygon') : setPolygonStyle('multipolygon');
-
     const h3Index = geoToH3(mainCoord.lat, mainCoord.lng, 7);
     const singlepolygonCoord = h3ToGeoBoundary(h3Index);
-
     const h3IndexArr = kRing(h3Index, 1);
     const multipolygonCoords = h3SetToMultiPolygon(h3IndexArr);
+
+    count.current += 1;
+    count.current === 1 ? setPolygonStyle('singlepolygon') : setPolygonStyle('multipolygon');
 
     setPolygonCoords({
       singlepolygon: singlepolygonCoord,
@@ -49,7 +45,7 @@ function MapPage() {
         ? <Loading />
         : <>
             <h3>중심 좌표 값 : {mainCoord.lat}, {mainCoord.lng}</h3>
-            <Map polygonStyle={polygonStyle} coordinates={mainCoord} polygonCoords={polygonCoords} count={count.current} />
+            <Map polygonStyle={polygonStyle} coordinates={mainCoord} polygonCoords={polygonCoords} />
             <Button handleClick={handleClick}>
               {count ? '주변다각형' : '다각형보기'}
             </Button>

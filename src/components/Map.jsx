@@ -46,7 +46,7 @@ function Map({
           const { singlepolygon } = polygonCoords;
 
           singlepolygon.forEach(el => {
-            singlepolygonArr.push({ lat: el[0], lng: el[1]});
+            singlepolygonArr.push({ lat: el[0], lng: el[1] });
           });
           break;
         }
@@ -54,7 +54,7 @@ function Map({
           const { multipolygon } = polygonCoords;
 
           multipolygon[0][0].forEach(el => {
-            multipolygonArr.push({ lat: el[0], lng: el[1]});
+            multipolygonArr.push({ lat: el[0], lng: el[1] });
           });
           break;
         }
