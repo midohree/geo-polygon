@@ -52,7 +52,6 @@ npm start
 | Redux-saga             |
 | Axios                  |
 | Styled-components      |
-| React-testing-library  |
 
 ## 주요 기능
 
